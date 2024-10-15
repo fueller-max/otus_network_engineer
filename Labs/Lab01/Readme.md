@@ -96,16 +96,15 @@ VLAN таблица имеет следующий вид:
 
 Проверка доступа шлюза по умолчанию (R1) станции PC-A
 ![](/Labs/Lab01/pics/PC_A_DG.png)
-<br>
+
 Проверка доступа шлюза по умолчанию (R1) станции PC-B
 ![](/Labs/Lab01/pics/PC_B_DG.png)
-<br>
+
 Проверка доступа PC-B со станции PC-A
 ![](/Labs/Lab01/pics/PC_A_to_PC_B.png)
-<br>
+
 Проверка доступа PC-A со станции PC-B
 ![](/Labs/Lab01/pics/PC_B_to_PC_A.png)
 
 
 
- [Конфигурации устройств](configs/)
