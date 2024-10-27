@@ -1,6 +1,6 @@
 ## Implement DCHP
 
-## 1. Implement DHCPv4
+### Implement DHCPv4
 
 ###  Objectives:
 1. Build the Network and Configure Basic Device Settings
