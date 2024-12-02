@@ -23,6 +23,11 @@
 
 2. [Настроить IP адреса на каждом активном порту](Readme.md#2-настроить-ip-адреса-на-каждом-активном-порту)
 
+3. [Настроить каждый VPC в каждом офисе в своем VLAN](Readme.md#3-настроить-каждый-vpc-в-каждом-офисе-в-своем-vlan)
+
+4. [Настроить VLAN/Loopbackup interface управления для сетевых устройств](Readme.md#4-настроить-vlanloopbackup-interface-управления-для-сетевых-устройств)
+
+5. [Настроить сети офисов так, чтобы не возникало broadcast штормов, использование линков было максимально оптимизировано](Readme.md#5-настроить-сети-офисов-так-чтобы-не-возникало-broadcast-штормов-использование-линков-было-максимально-оптимизировано)
 
 #### 1. Разработать и задокументируете адресное пространство для лабораторного стенда
 
@@ -52,4 +57,51 @@
 
 Ссылка на конфигурации всех устройств по офисам доступны по ссылкам:
 
-[Москва](//Labs/Lab04/configs/Moscow )
+[Москва](https://github.com/fueller-max/otus_network_engineer/tree/main/Labs/Lab04/configs/Moscow )
+
+[Санкт-Петербург](https://github.com/fueller-max/otus_network_engineer/tree/main/Labs/Lab04/configs/StPetersburg)
+
+[Чокурдах](https://github.com/fueller-max/otus_network_engineer/tree/main/Labs/Lab04/configs/Chohurdah)
+
+[Триада](https://github.com/fueller-max/otus_network_engineer/tree/main/Labs/Lab04/configs/Triada)
+
+[Ламас](https://github.com/fueller-max/otus_network_engineer/tree/main/Labs/Lab04/configs/Lamas)
+
+[Китрон](https://github.com/fueller-max/otus_network_engineer/tree/main/Labs/Lab04/configs/Kitron)
+
+[Лабытынаги](https://github.com/fueller-max/otus_network_engineer/tree/main/Labs/Lab04/configs/Labytnagi)
+
+
+Для маршрутизации между Vlan в офисах Москва и Санкт-Петербург используется подход с маршрутизации коммуатором 3-го уровня посредством SVI.
+
+Проверка связности VLAN в офисе Москва посредством ping VPC2 из VPC1:
+
+![](/Labs/Lab04/pics/Moscow_VPC1_ping_to_VPC2.jpg)
+
+Проверка связности VLAN в офисе Санкт-Питербург посредством ping VPC8 из VPC9:
+
+![](/Labs/Lab04/pics/StPetersburg_VPC9_ping_to_VPC8.jpg)
+
+
+Для маршрутизации между Vlan в офисе Чокурдах используется схема "Router on Stick".
+
+Проверка связности VLAN в офисе Чокурдах  посредством ping VPC31 из VPC30:
+
+![](/Labs/Lab04/pics/Chokurdah_VPC31_ping_to_VPC30.jpg)
+
+
+#### 3. Настроить каждый VPC в каждом офисе в своем VLAN.
+
+Каждый VPC находится в отдельном VLAN в соотвествии с приведенной схемой.
+
+
+#### 4. Настроить VLAN/Loopbackup interface управления для сетевых устройств
+
+Для управления устройствами типа роутер на всех роутерах настроен Loopback 0 интерфейс.
+
+Для управления устройствами типа свитч на всех роутерах настроен Management Vlan200. А также на некоторых свитчах(SW4,SW5 в Москве) и (SW9,SW10 в Санкт-Петербурге) настроены SVI интерфейсы для маршрутизации и управления.
+
+#### 5. Настроить сети офисов так, чтобы не возникало broadcast штормов, использование линков было максимально оптимизировано
+
+Проверка в процессе последующей настройки/конфигруации
+
