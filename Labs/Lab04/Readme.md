@@ -57,7 +57,7 @@
 
 Ссылка на конфигурации всех устройств по офисам доступны по ссылкам:
 
-[Москва](https://github.com/fueller-max/otus_network_engineer/tree/main/Labs/Lab04/configs/Moscow )
+[Москва](https://github.com/fueller-max/otus_network_engineer/tree/main/Labs/Lab04/configs/Moscow)
 
 [Санкт-Петербург](https://github.com/fueller-max/otus_network_engineer/tree/main/Labs/Lab04/configs/StPetersburg)
 
