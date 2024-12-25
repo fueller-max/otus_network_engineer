@@ -1,0 +1,127 @@
+R32#sh run
+Building configuration...
+
+Current configuration : 1271 bytes
+!
+! Last configuration change at 11:04:03 UTC Wed Dec 25 2024
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname R32
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 172.16.103.1 255.255.255.255
+!
+interface Ethernet0/0
+ ip address 172.16.18.2 255.255.255.248
+!
+interface Ethernet0/1
+ no ip address
+ shutdown
+!
+interface Ethernet0/2
+ no ip address
+ shutdown
+!
+interface Ethernet0/3
+ no ip address
+ shutdown
+!
+!
+router eigrp St-Petersburg
+ !
+ address-family ipv4 unicast autonomous-system 2042
+  !
+  topology base
+   distribute-list 10 in
+  exit-af-topology
+  network 172.16.18.0 0.0.0.7
+  network 172.16.103.1 0.0.0.0
+  eigrp router-id 0.0.0.32
+ exit-address-family
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+access-list 10 permit 0.0.0.0
+access-list 10 deny   any
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+ transport input none
+!
+!
+end
