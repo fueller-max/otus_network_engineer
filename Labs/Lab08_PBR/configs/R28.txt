@@ -1,0 +1,172 @@
+R28#sh run
+Building configuration...
+
+Current configuration : 2496 bytes
+!
+! Last configuration change at 08:34:00 UTC Fri Dec 27 2024
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname R28
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+track 1 ip sla 1 reachability
+!
+track 2 ip sla 2 reachability
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ ip address 176.192.172.2 255.255.255.248
+!
+interface Ethernet0/1
+ ip address 176.192.173.2 255.255.255.248
+!
+interface Ethernet0/2
+ description Trunk link to SW29
+ no ip address
+!
+interface Ethernet0/2.10
+ description Default Gateway for VLAN 10
+ encapsulation dot1Q 10
+ ip address 192.168.10.1 255.255.255.0
+ ip policy route-map tracking
+!
+interface Ethernet0/2.20
+ description Default Gateway for VLAN 20
+ encapsulation dot1Q 20
+ ip address 192.168.20.1 255.255.255.0
+ ip policy route-map tracking
+!
+interface Ethernet0/2.200
+ encapsulation dot1Q 200
+ ip address 192.168.200.65 255.255.255.252
+ ip policy route-map tracking
+!
+interface Ethernet0/3
+ no ip address
+ shutdown
+!
+interface Ethernet1/0
+ no ip address
+ shutdown
+!
+interface Ethernet1/1
+ no ip address
+ shutdown
+!
+interface Ethernet1/2
+ no ip address
+ shutdown
+!
+interface Ethernet1/3
+ no ip address
+ shutdown
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip route 0.0.0.0 0.0.0.0 176.192.172.1
+ip route 0.0.0.0 0.0.0.0 176.192.173.1 10
+!
+ip sla 1
+ icmp-echo 176.192.172.1 source-interface Ethernet0/0
+ threshold 2
+ timeout 2000
+ frequency 3
+ip sla schedule 1 life forever start-time now
+ip sla 2
+ icmp-echo 176.192.173.1 source-interface Ethernet0/1
+ threshold 2
+ timeout 2000
+ frequency 3
+ip sla schedule 2 life forever start-time now
+!
+route-map tracking permit 100
+ match ip address 1
+ set ip next-hop verify-availability 176.192.172.1 10 track 1
+ set ip next-hop verify-availability 176.192.173.1 20 track 2
+!
+route-map tracking permit 120
+ match ip address 2
+ set ip next-hop verify-availability 176.192.173.1 10 track 2
+ set ip next-hop verify-availability 176.192.172.1 20 track 1
+!
+!
+access-list 1 permit 192.168.10.0 0.0.0.255
+access-list 2 permit 192.168.200.65
+access-list 2 permit 192.168.20.0 0.0.0.255
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+ transport input none
+!
+!
+end
