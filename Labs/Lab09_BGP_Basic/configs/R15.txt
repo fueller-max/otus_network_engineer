@@ -1,0 +1,146 @@
+R15#sh run
+Building configuration...
+
+Current configuration : 1866 bytes
+!
+! Last configuration change at 17:20:55 UTC Sun Jan 19 2025
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname R15
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 10.20.101.1 255.255.255.255
+!
+interface Ethernet0/0
+ ip address 10.20.3.1 255.255.255.248
+!
+interface Ethernet0/1
+ ip address 10.20.6.1 255.255.255.248
+!
+interface Ethernet0/2
+ ip address 176.192.165.2 255.255.255.248
+!
+interface Ethernet0/3
+ ip address 10.20.4.1 255.255.255.248
+!
+interface Ethernet1/0
+ ip address 10.20.7.2 255.255.255.248
+!
+interface Ethernet1/1
+ no ip address
+ shutdown
+!
+interface Ethernet1/2
+ no ip address
+ shutdown
+!
+interface Ethernet1/3
+ no ip address
+ shutdown
+!
+router ospf 110
+ router-id 0.0.0.15
+ area 10 stub
+ area 102 stub
+ area 102 filter-list prefix INTO-AREA-102 in
+ network 10.20.3.0 0.0.0.7 area 10
+ network 10.20.4.0 0.0.0.7 area 102
+ network 10.20.6.0 0.0.0.7 area 10
+ network 10.20.7.0 0.0.0.7 area 0
+ network 10.20.101.1 0.0.0.0 area 0
+!
+router bgp 1001
+ bgp log-neighbor-changes
+ network 176.192.165.0 mask 255.255.255.248
+ neighbor 176.192.165.1 remote-as 301
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip route 0.0.0.0 0.0.0.0 172.192.165.1
+ip route 0.0.0.0 0.0.0.0 176.192.165.1
+!
+!
+ip prefix-list INTO-AREA-102 seq 5 deny 10.20.1.0/29
+ip prefix-list INTO-AREA-102 seq 6 deny 10.20.102.1/32
+ip prefix-list INTO-AREA-102 seq 10 permit 0.0.0.0/0 le 32
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+ transport input none
+!
+!
+end
