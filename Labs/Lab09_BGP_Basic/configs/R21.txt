@@ -1,9 +1,7 @@
 R21#sh run
 Building configuration...
 
-Current configuration : 1512 bytes
-!
-! Last configuration change at 17:26:35 UTC Sun Jan 19 2025
+Current configuration : 1366 bytes
 !
 version 15.4
 service timestamps debug datetime msec
@@ -69,13 +67,13 @@ interface Loopback0
  ip address 10.3.2.1 255.255.255.255
 !
 interface Ethernet0/0
- ip address 176.192.165.1 255.255.255.248
+ ip address 175.192.168.5 255.255.255.252
 !
 interface Ethernet0/1
- ip address 176.192.150.2 255.255.255.248
+ ip address 174.192.168.10 255.255.255.252
 !
 interface Ethernet0/2
- ip address 176.192.169.2 255.255.255.248
+ ip address 176.192.168.10 255.255.255.252
 !
 interface Ethernet0/3
  no ip address
@@ -99,19 +97,17 @@ interface Ethernet1/3
 !
 router bgp 301
  bgp log-neighbor-changes
- network 10.3.2.1 mask 255.255.255.255
- network 176.192.150.0 mask 255.255.255.248
- network 176.192.165.0 mask 255.255.255.248
- network 176.192.169.0 mask 255.255.255.248
- neighbor 176.192.150.1 remote-as 101
- neighbor 176.192.165.2 remote-as 1001
- neighbor 176.192.169.1 remote-as 520
+ network 175.192.168.0 mask 255.255.255.0
+ neighbor 174.192.168.9 remote-as 101
+ neighbor 175.192.168.6 remote-as 1001
+ neighbor 176.192.168.9 remote-as 520
 !
 ip forward-protocol nd
 !
 !
 no ip http server
 no ip http secure-server
+ip route 175.192.168.0 255.255.255.0 Null0
 !
 !
 !

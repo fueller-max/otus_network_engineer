@@ -1,9 +1,17 @@
+R18#ping 174.192.168.6
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 174.192.168.6, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 1/1/2 ms
+R18#ping 175.192.168.6
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 175.192.168.6, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 1/1/2 ms
 R18#sh run
 Building configuration...
 
-Current configuration : 1771 bytes
-!
-! Last configuration change at 18:32:27 UTC Sun Jan 19 2025
+Current configuration : 1625 bytes
 !
 version 15.4
 service timestamps debug datetime msec
@@ -75,10 +83,10 @@ interface Ethernet0/1
  ip address 172.16.1.1 255.255.255.248
 !
 interface Ethernet0/2
- ip address 176.192.170.2 255.255.255.248
+ ip address 176.192.168.14 255.255.255.252
 !
 interface Ethernet0/3
- ip address 176.192.171.2 255.255.255.248
+ ip address 176.192.168.18 255.255.255.252
 !
 !
 router eigrp St-Peterburg
@@ -104,10 +112,8 @@ router eigrp St-Peterburg
 !
 router bgp 2042
  bgp log-neighbor-changes
- network 176.192.170.0 mask 255.255.255.248
- network 176.192.171.0 mask 255.255.255.248
- neighbor 176.192.170.1 remote-as 520
- neighbor 176.192.171.1 remote-as 520
+ neighbor 176.192.168.13 remote-as 520
+ neighbor 176.192.168.17 remote-as 520
 !
 ip forward-protocol nd
 !

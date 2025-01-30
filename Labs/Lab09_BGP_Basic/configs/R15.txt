@@ -1,9 +1,12 @@
+R15#ping 176.192.168.14
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 176.192.168.14, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 1/1/2 ms
 R15#sh run
 Building configuration...
 
-Current configuration : 1866 bytes
-!
-! Last configuration change at 17:20:55 UTC Sun Jan 19 2025
+Current configuration : 1760 bytes
 !
 version 15.4
 service timestamps debug datetime msec
@@ -75,7 +78,7 @@ interface Ethernet0/1
  ip address 10.20.6.1 255.255.255.248
 !
 interface Ethernet0/2
- ip address 176.192.165.2 255.255.255.248
+ ip address 175.192.168.6 255.255.255.252
 !
 interface Ethernet0/3
  ip address 10.20.4.1 255.255.255.248
@@ -108,8 +111,7 @@ router ospf 110
 !
 router bgp 1001
  bgp log-neighbor-changes
- network 176.192.165.0 mask 255.255.255.248
- neighbor 176.192.165.1 remote-as 301
+ neighbor 175.192.168.5 remote-as 301
 !
 ip forward-protocol nd
 !

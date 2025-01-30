@@ -1,9 +1,7 @@
 R26#sh run
 Building configuration...
 
-Current configuration : 1546 bytes
-!
-! Last configuration change at 17:01:21 UTC Sun Jan 19 2025
+Current configuration : 1483 bytes
 !
 version 15.4
 service timestamps debug datetime msec
@@ -81,7 +79,7 @@ interface Ethernet0/2
  ip router isis 115
 !
 interface Ethernet0/3
- ip address 176.192.171.1 255.255.255.248
+ ip address 176.192.168.17 255.255.255.252
 !
 interface Ethernet1/0
  no ip address
@@ -105,15 +103,15 @@ router isis 115
 !
 router bgp 520
  bgp log-neighbor-changes
- network 176.192.171.0 mask 255.255.255.248
- network 176.192.172.0 mask 255.255.255.248
- neighbor 176.192.171.2 remote-as 2042
+ network 176.192.168.0 mask 255.255.255.0
+ neighbor 176.192.168.18 remote-as 2042
 !
 ip forward-protocol nd
 !
 !
 no ip http server
 no ip http secure-server
+ip route 176.192.168.0 255.255.255.0 Null0
 ip route 192.168.10.0 255.255.255.0 176.192.172.2
 !
 !
