@@ -98,7 +98,7 @@ Total number of prefixes 1
 Используем настройку prefix-list таким образом, чтобы фильтрацию проходил только префикс самого офиса и ничего более.
 
 ````
-R18(config)#ip prefix-list NO-TRANSIT permit 176.16.0.0/16
+R18(config)#ip prefix-list NO-TRANSIT seq 5 permit 172.16.0.0/16
 ````
 
 Назначаем на оба соседства R24/R25:
@@ -114,7 +114,7 @@ R18(config-router)#neighbor 176.192.168.17 prefix-list NO-TRANSIT out
 R24#sh ip bgp neighbors 176.192.168.14 routes
 
      Network          Next Hop            Metric LocPrf Weight Path
- *>  176.16.0.0       176.192.168.14           0             0 2042 i
+*>  172.16.0.0       176.192.168.14           0             0 2042 i
 
 Total number of prefixes 1
 ````
@@ -123,7 +123,7 @@ Total number of prefixes 1
 R26#sh ip bgp neighbor 176.192.168.18 routes
 
      Network          Next Hop            Metric LocPrf Weight Path
- *>  176.16.0.0       176.192.168.18           0             0 2042 i
+ *>  172.16.0.0       176.192.168.18           0             0 2042 i
 
 Total number of prefixes 1
 ````
@@ -263,7 +263,7 @@ Gateway of last resort is 174.192.168.5 to network 0.0.0.0
 
 #### 4. Настроить провайдера Ламас так, чтобы в офис Москва отдавался только маршрут по умолчанию и префикс офиса С.-Петербург
 
-Подход будет аналогичным п.3 с разницей лишь настройки prefix-list c добавлением сети 176.16.0.0/16 Санкт-Петербурга
+Подход будет аналогичным п.3 с разницей лишь настройки prefix-list c добавлением сети 172.16.0.0/16 Санкт-Петербурга
 
 Приведем настройки:
 
@@ -283,7 +283,7 @@ router bgp 301
 Префикс лист для Москвского офиса: 
 ````
 R21(config)#ip prefix-list Moscow-Office seq 5 permit 0.0.0.0/0
-R21(config)#ip prefix-list Moscow-Office seq 10 permit 176.16.0.0/16
+R21(config)#ip prefix-list Moscow-Office seq 10 permit 172.16.0.0/16
 ````
 
 ````
@@ -300,7 +300,7 @@ R21#sh ip bgp neighbor 175.192.168.6 advertised-routes
 Originating default network 0.0.0.0
 
      Network          Next Hop            Metric LocPrf Weight Path
- *>  176.16.0.0       176.192.168.9                          0 520 2042 i
+ *>  172.16.0.0       176.192.168.9                          0 520 2042 i
 
 Total number of prefixes 1
 
@@ -315,7 +315,7 @@ R15#sh ip bgp
  *>  0.0.0.0          175.192.168.5                          0 301 i
  * i 10.20.0.0/16     10.20.100.1              0    150      0 i
  *>                   0.0.0.0                  0         32768 i
- *>  176.16.0.0       175.192.168.5                          0 301 520 2042 i
+ *>  172.16.0.0       175.192.168.5                          0 301 520 2042 i
 ````
 
 Соотвественно, приходит маршрут по умолчанию и префикс офиса Санкт-Петербург, как и требовалось.

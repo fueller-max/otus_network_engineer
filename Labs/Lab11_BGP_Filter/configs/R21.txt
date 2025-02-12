@@ -3,7 +3,7 @@ Building configuration...
 
 Current configuration : 1674 bytes
 !
-! Last configuration change at 13:49:14 UTC Tue Feb 11 2025
+! Last configuration change at 10:17:45 UTC Wed Feb 12 2025
 !
 version 15.4
 service timestamps debug datetime msec
@@ -116,7 +116,7 @@ ip route 175.192.168.0 255.255.255.0 Null0
 !
 !
 ip prefix-list Moscow-Office seq 5 permit 0.0.0.0/0
-ip prefix-list Moscow-Office seq 10 permit 176.16.0.0/16
+ip prefix-list Moscow-Office seq 10 permit 172.16.0.0/16
 !
 !
 !

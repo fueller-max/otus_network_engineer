@@ -1,7 +1,9 @@
 R18#sh run
 Building configuration...
 
-Current configuration : 1749 bytes
+Current configuration : 1811 bytes
+!
+! Last configuration change at 10:02:24 UTC Wed Feb 12 2025
 !
 version 15.4
 service timestamps debug datetime msec
@@ -102,7 +104,7 @@ router eigrp St-Peterburg
 !
 router bgp 2042
  bgp log-neighbor-changes
- network 176.16.0.0
+ network 172.16.0.0
  neighbor 176.192.168.13 remote-as 520
  neighbor 176.192.168.13 prefix-list NO-TRANSIT out
  neighbor 176.192.168.17 remote-as 520
@@ -114,10 +116,10 @@ ip forward-protocol nd
 !
 no ip http server
 no ip http secure-server
-ip route 176.16.0.0 255.255.0.0 Null0
+ip route 172.16.0.0 255.255.0.0 Null0
 !
 !
-ip prefix-list NO-TRANSIT seq 5 permit 176.16.0.0/16
+ip prefix-list NO-TRANSIT seq 5 permit 172.16.0.0/16
 !
 !
 !
