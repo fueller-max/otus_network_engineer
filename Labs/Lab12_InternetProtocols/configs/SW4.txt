@@ -1,0 +1,131 @@
+sw4#sh run
+Building configuration...
+
+Current configuration : 1828 bytes
+!
+! Last configuration change at 06:43:53 UTC Tue Feb 25 2025
+! NVRAM config last updated at 06:44:56 UTC Tue Feb 25 2025
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+service compress-config
+!
+hostname sw4
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+!
+!
+!
+!
+!
+!
+!
+!
+ip cef
+no ipv6 cef
+!
+!
+!
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Port-channel1
+ switchport trunk allowed vlan 10,20
+ switchport trunk encapsulation dot1q
+!
+interface Ethernet0/0
+ switchport access vlan 10
+!
+interface Ethernet0/1
+ switchport access vlan 20
+!
+interface Ethernet0/2
+ switchport trunk allowed vlan 10,20
+ switchport trunk encapsulation dot1q
+ channel-group 1 mode active
+!
+interface Ethernet0/3
+ switchport trunk allowed vlan 10,20
+ switchport trunk encapsulation dot1q
+ channel-group 1 mode active
+!
+interface Ethernet1/0
+ no switchport
+ ip address 10.20.8.2 255.255.255.252
+ duplex auto
+!
+interface Ethernet1/1
+ no switchport
+ ip address 10.20.9.2 255.255.255.252
+ duplex auto
+!
+interface Ethernet1/2
+!
+interface Ethernet1/3
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan10
+ ip address 10.20.10.1 255.255.255.0
+ ip helper-address 10.20.8.1
+!
+interface Vlan20
+ ip address 10.20.20.1 255.255.255.0
+ ip helper-address 10.20.8.1
+!
+router ospf 110
+ router-id 0.0.0.4
+ area 10 stub
+ network 10.20.8.0 0.0.0.3 area 10
+ network 10.20.9.0 0.0.0.3 area 10
+ network 10.20.10.0 0.0.0.255 area 10
+ network 10.20.20.0 0.0.0.255 area 10
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+!
+ntp server 10.20.103.1
+ntp server 10.20.104.1
+!
+end
+
+sw4#
