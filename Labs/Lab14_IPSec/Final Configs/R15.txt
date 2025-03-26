@@ -1,0 +1,267 @@
+R15#sh run
+Building configuration...
+
+Current configuration : 7231 bytes
+!
+! No configuration change since last restart
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname R15
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+ip domain name labtech.su
+ip host CA 10.60.100.1
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+crypto pki trustpoint CA
+ enrollment url http://CA:80
+ serial-number
+ revocation-check crl
+!
+!
+crypto pki certificate chain CA
+ certificate 02
+  30820307 308201EF A0030201 02020102 300D0609 2A864886 F70D0101 05050030
+  0D310B30 09060355 04031302 4341301E 170D3235 30333235 30383034 32305A17
+  0D323630 33323530 38303432 305A3030 312E300F 06035504 05130836 37313039
+  31303430 1B06092A 864886F7 0D010902 160E5231 352E6C61 62746563 682E7375
+  30820122 300D0609 2A864886 F70D0101 01050003 82010F00 3082010A 02820101
+  00BCBE2D 6F35C3C0 CC7029C6 55F93EAF 0FE25491 48F9B893 D07EE068 C02F6A17
+  CF6E1AF8 0A04D8A4 F7CC2200 40BDCDCC 4E9648AA 274156D3 EEBAB625 80ACEF7C
+  764ACB5A F5AC5AFC AB1D3B59 AD82984B E13B3434 6F51C071 705FCD07 7FF5409A
+  469F0E5C C6693E6C 7BA54FCC 937E1640 DFFEF0D0 529ABC98 10660409 FCB4C1F4
+  14EDBD82 2F110773 AAD39919 BAAE2099 DF173B7E 0A0B58FF E6EEB477 36B49477
+  2C4ABADE C2B7CA3C F5083002 36F99DB3 704A8FC2 BFC42937 24478281 8E442B9B
+  3343B087 CE7D407D 46FEBF27 A6092289 20C5FE10 F4DFE414 8971359A A3C21669
+  0A9E30CF B38D8568 839A87E7 F94C555D B58BF113 A194D144 FD3F1744 21793EDB
+  95020301 0001A34F 304D300B 0603551D 0F040403 0205A030 1F060355 1D230418
+  30168014 A084C2A2 F364896A AC4A670E 8802DFEC 6B4CF8B3 301D0603 551D0E04
+  160414DA 6AF7CF9B F504FAD2 639C2DA9 E49F127D AE224830 0D06092A 864886F7
+  0D010105 05000382 01010068 97972774 3157530B BF548E93 54FBC659 F492407F
+  0ABC092B 7C65253F BFA6533F AF206EEB 66A43B12 3F0034B6 5021DE79 DA262C91
+  CB09D245 FBA0F907 B020BA13 6484AEDA B422CBFC D3D391A8 D191136B F34D5317
+  0C7A94A7 68A38273 53E9C334 9AB00684 D44574B0 F597CCED 9ED21885 1AC3D27F
+  FD8E581D AAA61CC0 4AC4E775 CDF6235B 60786049 631F394E 973AA44D B3385D7C
+  03DB872F 0AA4A229 65D94CF2 7A2710F6 F9129403 9E8A3AD5 2F4E5A10 02558385
+  C28D1D19 1E0D32CC AEC75965 590C5F1D 7531B8AE 99B219BC 6B132CA1 77D7390B
+  71BFDEFF 5538FCE1 126C4CA9 C042B986 AA22F57A 1A027D00 75B5E8DF 0548A4A5
+  178785FA 8811D6AD C813EA
+        quit
+ certificate ca 01
+  308202F8 308201E0 A0030201 02020101 300D0609 2A864886 F70D0101 04050030
+  0D310B30 09060355 04031302 4341301E 170D3235 30333235 30373234 33395A17
+  0D323830 33323430 37323433 395A300D 310B3009 06035504 03130243 41308201
+  22300D06 092A8648 86F70D01 01010500 0382010F 00308201 0A028201 0100B9EE
+  B8C422CC AD28DADC 8325B1C0 789B8001 F1C2E044 0FD659BC 3B382DF0 FF0B8BD9
+  22479E1F 32FFF839 8D2A6FD8 377581A1 493B230B BD63CBB5 DF1D69E6 7B3C4220
+  47A2FFB8 7E1F35FE B081403D 9F031210 92EA388E 388612F5 86374534 F4241784
+  9E4175E0 58B954FF D371056E 7948D208 DEDFAB35 69BA0B58 3965A71D E97831E3
+  AB0682E3 4C17021E C0888DD5 3AC1EFD8 7020FA79 6014D5FD 9D301774 F16FD949
+  E83FF465 F582477F 293F9967 01A68A05 57144686 12AC7FCF B93F45D0 4DC329A8
+  2D830F25 8098DD30 A60D30C8 8E64EC91 F3D0FC11 F19D2014 602C67AC A352E0CE
+  F2BE9C74 ABC7F426 F4E00A45 5573BF42 B21DDD6D 6DD6D8F4 717143AA 17870203
+  010001A3 63306130 0F060355 1D130101 FF040530 030101FF 300E0603 551D0F01
+  01FF0404 03020186 301F0603 551D2304 18301680 14A084C2 A2F36489 6AAC4A67
+  0E8802DF EC6B4CF8 B3301D06 03551D0E 04160414 A084C2A2 F364896A AC4A670E
+  8802DFEC 6B4CF8B3 300D0609 2A864886 F70D0101 04050003 82010100 5762C3B2
+  BDC28DD0 805F0BF5 4063944B A72FDC12 73BD487E 09F97E69 646B1921 8BBB8F71
+  06013D2D 68378FD4 3B664C63 48FA578E 0C3BA102 51A19D3D FA0931DC 38967873
+  B4AF48DE ED39C61D 3AF4590F 809C7AE2 8AC3831F 36862631 5AC4759E 615A43DD
+  1A0A7863 C9982D94 99B91507 F2919F69 94E82AE9 79B8F8E3 3781438A E9F28E6B
+  0982CEF1 1D4B6274 8C7E90EB 986C240F A64BE009 71707A4E DFA27979 E98E42FC
+  D468A802 42CACB5A 71775C39 2F4BFFB2 5248700B EA56BDE9 B12E8401 39E05445
+  8D1D20EE 3F05A2F7 E1B8CAB5 123232FD A941BF13 0EAABC50 E3CDD68F AB82602E
+  D95ECBAD 1C167D58 7A9E0C09 51B7FC5D C0A63E72 EEEDEC91 DA409986
+        quit
+!
+redundancy
+!
+!
+!
+!
+!
+!
+!
+crypto isakmp policy 10
+ encr aes
+ hash sha256
+ group 16
+ lifetime 3600
+!
+!
+crypto ipsec transform-set VTI esp-aes esp-sha-hmac
+ mode transport
+!
+crypto ipsec profile Test
+ set transform-set VTI
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 10.20.101.1 255.255.255.255
+!
+interface Tunnel10
+ ip address 10.10.10.15 255.255.255.0
+ tunnel source 175.192.168.6
+ tunnel destination 176.192.168.14
+ tunnel protection ipsec profile Test
+!
+interface Tunnel20
+ ip address 10.10.11.15 255.255.255.0
+ no ip redirects
+ ip mtu 1400
+ no ip next-hop-self eigrp 20
+ no ip split-horizon eigrp 20
+ ip nhrp authentication DMVPN
+ ip nhrp map multicast dynamic
+ ip nhrp network-id 1
+ ip tcp adjust-mss 1360
+ tunnel source Ethernet0/2
+ tunnel mode gre multipoint
+ tunnel protection ipsec profile Test
+!
+interface Ethernet0/0
+ ip address 10.20.3.1 255.255.255.248
+ ip nat inside
+ ip virtual-reassembly in
+!
+interface Ethernet0/1
+ ip address 10.20.6.1 255.255.255.248
+ ip nat inside
+ ip virtual-reassembly in
+!
+interface Ethernet0/2
+ ip address 175.192.168.6 255.255.255.252
+ ip nat outside
+ ip virtual-reassembly in
+!
+interface Ethernet0/3
+ ip address 10.20.4.1 255.255.255.248
+ ip nat inside
+ ip virtual-reassembly in
+!
+interface Ethernet1/0
+ ip address 10.20.7.2 255.255.255.248
+ ip nat inside
+ ip virtual-reassembly in
+!
+interface Ethernet1/1
+ no ip address
+ shutdown
+!
+interface Ethernet1/2
+ no ip address
+ shutdown
+!
+interface Ethernet1/3
+ no ip address
+ shutdown
+!
+!
+router eigrp 20
+ network 10.10.11.0 0.0.0.255
+!
+router ospf 110
+ router-id 0.0.0.15
+ area 10 stub
+ area 102 stub
+ area 102 filter-list prefix INTO-AREA-102 in
+ redistribute bgp 1001 subnets
+ network 10.20.3.0 0.0.0.7 area 10
+ network 10.20.4.0 0.0.0.7 area 102
+ network 10.20.6.0 0.0.0.7 area 10
+ network 10.20.7.0 0.0.0.7 area 0
+ network 10.20.101.1 0.0.0.0 area 0
+!
+router bgp 1001
+ bgp log-neighbor-changes
+ bgp default local-preference 200
+ bgp redistribute-internal
+ neighbor 10.20.100.1 remote-as 1001
+ neighbor 10.20.100.1 update-source Loopback0
+ neighbor 10.20.100.1 next-hop-self
+ neighbor 175.192.168.5 remote-as 301
+ neighbor 175.192.168.5 filter-list 1 out
+!
+ip forward-protocol nd
+!
+ip as-path access-list 1 permit ^$
+!
+no ip http server
+no ip http secure-server
+ip nat pool static_nat 176.192.200.2 176.192.200.10 netmask 255.255.255.0
+ip nat inside source list 10 interface Ethernet0/2 overload
+ip nat inside source static 10.20.4.2 176.192.200.2
+ip nat inside source static 10.20.102.1 176.192.200.4
+ip route 10.20.0.0 255.255.0.0 Null0
+ip route 172.16.0.0 255.255.0.0 10.10.10.18
+!
+!
+ip prefix-list INTO-AREA-102 seq 5 deny 10.20.1.0/29
+ip prefix-list INTO-AREA-102 seq 6 deny 10.20.102.1/32
+ip prefix-list INTO-AREA-102 seq 10 permit 0.0.0.0/0 le 32
+!
+!
+access-list 10 permit 10.20.0.0 0.0.255.255
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+ transport input none
+!
+ntp server 10.20.103.1
+ntp server 10.20.104.1
+!
+end
+

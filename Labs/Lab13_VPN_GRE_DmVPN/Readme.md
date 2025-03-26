@@ -167,11 +167,9 @@ R15(config-if)#ip address 10.10.10.1 255.255.255.0
 R15(config-if)#ip mtu 1416
 R15(config-if)#tunnel source e0/2
 R15(config-if)#tunnel mode gre multipoint
-R15(config-if)#tunnel key 999
 R15(config-if)#ip nhrp authentication DMVPN
 R15(config-if)#ip nhrp map multicast dynamic
 R15(config-if)#ip nhrp network-id 1
-
 ````
 
 * tunnel mode: by default the tunnel mode will be point-to-point GRE, we require a multipoint interface on the hub.
@@ -228,7 +226,7 @@ Interface: Tunnel20, IPv4 NHRP Details
 Type:Hub, NHRP Peers:2,
 
  # Ent  Peer NBMA Addr Peer Tunnel Add State  UpDn Tm Attrb
- ----- --------------- --------------- ----- -------- -----
+ ----- --------------- --------------- ----- -------- ----- 
      1 176.192.168.22      10.10.10.10    UP 00:12:52     D
      1 176.192.168.30      10.10.10.11    UP 00:12:57     D
 

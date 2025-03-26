@@ -1,0 +1,278 @@
+R28#sh run
+Building configuration...
+
+Current configuration : 7404 bytes
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname R28
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+ip domain name labtech.su
+ip host CA 10.60.100.1
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+crypto pki trustpoint CA
+ enrollment url http://CA:80
+ serial-number
+ revocation-check crl
+!
+!
+crypto pki certificate chain CA
+ certificate 05
+  30820307 308201EF A0030201 02020105 300D0609 2A864886 F70D0101 05050030
+  0D310B30 09060355 04031302 4341301E 170D3235 30333235 31373434 30395A17
+  0D323630 33323531 37343430 395A3030 312E300F 06035504 05130836 37313039
+  33313230 1B06092A 864886F7 0D010902 160E5232 382E6C61 62746563 682E7375
+  30820122 300D0609 2A864886 F70D0101 01050003 82010F00 3082010A 02820101
+  00B0609B 31367123 F460CC7B 70E2350E A4576AFD 225FC5BB 4CBF2F1D A5430CB3
+  4B4FAFC3 7DA6D465 5381B051 491CC771 9047A891 08E7B252 7C6BF5E2 8F40A7D7
+  03223780 DECCA48D C6DD6514 FC1911D2 6CA324F4 8A4D298E BBF4418F 09D339C1
+  77C4FD9F D3FC396B E6FDFFC9 73414A84 8614BE65 C37D940C 40C0C217 53805867
+  60C01F30 F8A54E65 38F9FAC1 95C0DA0D 5871E642 BC158189 741EBE98 0E8AFEC5
+  70717165 0B50360E 176E66BC 05C574ED 18DE03D5 9C5FB328 AFED9674 F1593A42
+  F9B01A3E ACB2D31D 801877FC 3AA07068 DE8A2A68 BC6C8075 E71AD9C7 AD60661D
+  A31F08E0 B1950781 ED28574D D18C6B89 B50B6556 4C19D12E DDEB6D5A 51E802E8
+  95020301 0001A34F 304D300B 0603551D 0F040403 0205A030 1F060355 1D230418
+  30168014 A084C2A2 F364896A AC4A670E 8802DFEC 6B4CF8B3 301D0603 551D0E04
+  1604145A 834E64EF BF618C7E BA5244F6 1F055B67 459E9630 0D06092A 864886F7
+  0D010105 05000382 01010041 4B07141D C97C8019 C6CFEF40 7C27AA59 C99CF926
+  924DEE0D 83E551BA 1C51345C 998C2CA7 136C1183 1B6555AE B4159FEE AA460CC9
+  8AB9A9A0 F9B31476 BAD6984B C100171A EC425576 9039D583 7A8B8093 FB2EBA0A
+  3B40A763 BAE5127D 69B3483A 8512A754 1F897739 46440AEC 666E3587 613EDB2E
+  0546B9C4 190B37CD C2DF8511 8B924EC9 ADA63A6E 683602EF EA3C9A1C 13FF905C
+  F1D49EFE C1C4E9DB CE63EA56 B36B4DB2 895D2F7B 727F43E5 0816078D 70683BF7
+  B6CF8F8A D2FECB42 9A694A80 951C6681 48A2056A BBDD3D38 683A0217 B39DDFBF
+  89EC4424 E2F7131E 440E4F49 AC9E0AB6 EE0DAE97 9ECDB996 AB141834 E48AB964
+  7158EB4A B28EAFBF E31CB1
+        quit
+ certificate ca 01
+  308202F8 308201E0 A0030201 02020101 300D0609 2A864886 F70D0101 04050030
+  0D310B30 09060355 04031302 4341301E 170D3235 30333235 30373234 33395A17
+  0D323830 33323430 37323433 395A300D 310B3009 06035504 03130243 41308201
+  22300D06 092A8648 86F70D01 01010500 0382010F 00308201 0A028201 0100B9EE
+  B8C422CC AD28DADC 8325B1C0 789B8001 F1C2E044 0FD659BC 3B382DF0 FF0B8BD9
+  22479E1F 32FFF839 8D2A6FD8 377581A1 493B230B BD63CBB5 DF1D69E6 7B3C4220
+  47A2FFB8 7E1F35FE B081403D 9F031210 92EA388E 388612F5 86374534 F4241784
+  9E4175E0 58B954FF D371056E 7948D208 DEDFAB35 69BA0B58 3965A71D E97831E3
+  AB0682E3 4C17021E C0888DD5 3AC1EFD8 7020FA79 6014D5FD 9D301774 F16FD949
+  E83FF465 F582477F 293F9967 01A68A05 57144686 12AC7FCF B93F45D0 4DC329A8
+  2D830F25 8098DD30 A60D30C8 8E64EC91 F3D0FC11 F19D2014 602C67AC A352E0CE
+  F2BE9C74 ABC7F426 F4E00A45 5573BF42 B21DDD6D 6DD6D8F4 717143AA 17870203
+  010001A3 63306130 0F060355 1D130101 FF040530 030101FF 300E0603 551D0F01
+  01FF0404 03020186 301F0603 551D2304 18301680 14A084C2 A2F36489 6AAC4A67
+  0E8802DF EC6B4CF8 B3301D06 03551D0E 04160414 A084C2A2 F364896A AC4A670E
+  8802DFEC 6B4CF8B3 300D0609 2A864886 F70D0101 04050003 82010100 5762C3B2
+  BDC28DD0 805F0BF5 4063944B A72FDC12 73BD487E 09F97E69 646B1921 8BBB8F71
+  06013D2D 68378FD4 3B664C63 48FA578E 0C3BA102 51A19D3D FA0931DC 38967873
+  B4AF48DE ED39C61D 3AF4590F 809C7AE2 8AC3831F 36862631 5AC4759E 615A43DD
+  1A0A7863 C9982D94 99B91507 F2919F69 94E82AE9 79B8F8E3 3781438A E9F28E6B
+  0982CEF1 1D4B6274 8C7E90EB 986C240F A64BE009 71707A4E DFA27979 E98E42FC
+  D468A802 42CACB5A 71775C39 2F4BFFB2 5248700B EA56BDE9 B12E8401 39E05445
+  8D1D20EE 3F05A2F7 E1B8CAB5 123232FD A941BF13 0EAABC50 E3CDD68F AB82602E
+  D95ECBAD 1C167D58 7A9E0C09 51B7FC5D C0A63E72 EEEDEC91 DA409986
+        quit
+!
+redundancy
+!
+!
+track 1 ip sla 1 reachability
+!
+track 2 ip sla 2 reachability
+!
+!
+!
+!
+!
+!
+crypto isakmp policy 10
+ encr aes
+ hash sha256
+ group 16
+ lifetime 3600
+!
+!
+crypto ipsec transform-set VTI esp-aes esp-sha-hmac
+ mode transport
+!
+crypto ipsec profile Test
+ set transform-set VTI
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 192.168.100.1 255.255.255.255
+!
+interface Tunnel20
+ ip address 10.10.11.28 255.255.255.0
+ no ip redirects
+ ip mtu 1400
+ ip nhrp authentication DMVPN
+ ip nhrp map multicast 175.192.168.6
+ ip nhrp map 10.10.11.15 175.192.168.6
+ ip nhrp network-id 1
+ ip nhrp nhs 10.10.11.15
+ ip tcp adjust-mss 1360
+ tunnel source Ethernet0/0
+ tunnel mode gre multipoint
+ tunnel protection ipsec profile Test
+!
+interface Ethernet0/0
+ ip address 176.192.168.22 255.255.255.252
+ ip nat outside
+ ip virtual-reassembly in
+!
+interface Ethernet0/1
+ ip address 176.192.168.26 255.255.255.252
+ ip nat outside
+ ip virtual-reassembly in
+!
+interface Ethernet0/2
+ description Trunk link to SW29
+ no ip address
+!
+interface Ethernet0/2.10
+ description Default Gateway for VLAN 10
+ encapsulation dot1Q 10
+ ip address 192.168.10.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+ ip policy route-map tracking
+!
+interface Ethernet0/2.20
+ description Default Gateway for VLAN 20
+ encapsulation dot1Q 20
+ ip address 192.168.20.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+ ip policy route-map tracking
+!
+interface Ethernet0/2.200
+ encapsulation dot1Q 200
+ ip address 192.168.200.65 255.255.255.252
+ ip nat inside
+ ip virtual-reassembly in
+ ip policy route-map tracking
+!
+interface Ethernet0/3
+ no ip address
+ shutdown
+!
+interface Ethernet1/0
+ no ip address
+ shutdown
+!
+interface Ethernet1/1
+ no ip address
+ shutdown
+!
+interface Ethernet1/2
+ no ip address
+ shutdown
+!
+interface Ethernet1/3
+ no ip address
+ shutdown
+!
+!
+router eigrp 20
+ network 10.10.11.0 0.0.0.255
+ network 192.168.100.1 0.0.0.0
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip nat inside source list 10 interface Ethernet0/0 overload
+ip nat inside source list 11 interface Ethernet0/1 overload
+ip route 0.0.0.0 0.0.0.0 176.192.168.21
+ip route 0.0.0.0 0.0.0.0 176.192.168.25 10
+!
+ip sla 1
+ icmp-echo 176.192.168.21 source-interface Ethernet0/0
+ threshold 2
+ timeout 2000
+ frequency 3
+ip sla schedule 1 life forever start-time now
+ip sla 2
+ icmp-echo 176.192.168.25 source-interface Ethernet0/1
+ threshold 2
+ timeout 2000
+ frequency 3
+ip sla schedule 2 life forever start-time now
+!
+route-map tracking permit 100
+ match ip address 1
+ set ip next-hop verify-availability 176.192.168.21 10 track 1
+ set ip next-hop verify-availability 176.192.168.25 20 track 2
+!
+route-map tracking permit 120
+ match ip address 2
+ set ip next-hop verify-availability 176.192.168.25 10 track 2
+ set ip next-hop verify-availability 176.192.168.21 20 track 1
+!
+!
+access-list 1 permit 192.168.10.0 0.0.0.255
+access-list 2 permit 192.168.200.65
+access-list 2 permit 192.168.20.0 0.0.0.255
+access-list 10 permit 192.168.0.0 0.0.255.255
+access-list 11 permit 192.168.0.0 0.0.255.255
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+ transport input none
+!
+!
+end
