@@ -6,7 +6,7 @@
 
 1. Разработать действующую архитектуру сети среднего бизнес-предприятия, сотсоящего из основного офиса и удаленного филиала
 2. Обеспечить достаточный уровень избыточности (redundancy) для обеспечения  надежности и безотказности сети
-3. Использовать по возможности не-проприетарные решения для обеспечения взаимозамянемости компонентов 
+3. Использовать по возможности непроприетарные решения для обеспечения свободной взаимозамянемости компонентов 
 
 ### Решение:
 
@@ -21,6 +21,11 @@
 L3 план:
 
 ![](/Labs/Lab15_FinalProject/pics/L3_plan.jpg)
+
+
+Стенд проекта в среде виртуализации EVE:
+
+![](/Labs/Lab15_FinalProject/pics/EVE.jpg)
 
 
 
@@ -308,6 +313,296 @@ Vlan60 - Group 60
   Master Down interval is 6.003 sec
 ````
 
+
+### Настройка провайдера ISP
+
+Главный офис и филиал подключены к Интернет, через который посредством VPN ,будет осуществляться связность до внутренних ресурсов. Роль Интернета в данной работе будут выполнять два роутера, находящиеся в автономной системе AS300. Суммаризированный префикс выдачи IP клиентам 176.192.168./24, который будет нарезаться по маске /30 каждому клиенту. 
+
+Для обеспечения передачи маршрутов и связности между роутерами настроен iBGP поверх Looback интерфейсов. Для связности Looback настроены статические маршруты по underlay сети 10.10.10.8/30 
+
+
+![](/Labs/Lab15_FinalProject/pics/ISP1.jpg)
+
+
+Ниже приведены настройки роутера ISP_R1 и ISP_R2:
+
+````
+!
+hostname ISP_R1
+!
+ip cef
+no ipv6 cef
+!
+
+!
+interface Loopback0
+ ip address 10.1.1.1 255.255.255.255
+!
+interface Ethernet0/0
+ ip address 10.10.10.9 255.255.255.252
+!
+interface Ethernet0/1
+ ip address 176.192.168.9 255.255.255.252
+!
+interface Ethernet0/2
+ ip address 176.192.168.13 255.255.255.252
+!
+
+router bgp 300
+ bgp log-neighbor-changes
+ network 176.192.168.8 mask 255.255.255.252
+ network 176.192.168.12 mask 255.255.255.252
+ neighbor 10.2.2.2 remote-as 300
+ neighbor 10.2.2.2 update-source Loopback0
+!
+ip route 10.2.2.2 255.255.255.255 10.10.10.10
+!
+end
+
+````
+
+````
+!
+hostname ISP_R2
+!
+ip cef
+no ipv6 cef
+!
+interface Loopback0
+ ip address 10.2.2.2 255.255.255.255
+!
+interface Ethernet0/0
+ ip address 10.10.10.10 255.255.255.252
+!
+interface Ethernet0/1
+ ip address 176.192.168.33 255.255.255.252
+!
+router bgp 300
+ bgp log-neighbor-changes
+ network 176.192.168.32 mask 255.255.255.252
+ neighbor 10.1.1.1 remote-as 300
+ neighbor 10.1.1.1 update-source Loopback0
+!
+ip route 10.1.1.1 255.255.255.255 10.10.10.9
+!
+end
+
+````
+
+
+
 ### Настройка OSPF
 
+Для обеспечения передачи маршрутов в рамках головного офиса, а также филиала запущен проткол динамической маршрутизации OSPF, принципиальная схема которого показана ниже:
+
+
 ![](/Labs/Lab15_FinalProject/pics/OSPF_diagram.jpg)
+
+Backbone зона 0 (основная) развернута поверх двух GRE туннелей:
+ Core_R10 <-> Core_R1
+ Core_R10 <-> Core_R2
+
+ а также два stub зоны: Area 1 для основого офиса и Area 3 для филиала.
+
+  
+  Для туннелей выбираем overlay сети 101.0.1.0/24 и 101.0.2.0/24 для первого и второго туннелей соответсвенно.
+
+  Настройки GRE туннелей приведены ниже:
+
+  ````
+  hostname filiale_core_R10
+  !
+  interface Tunnel10
+  ip address 101.0.1.2 255.255.255.0
+  tunnel source 176.192.168.34
+  tunnel destination 176.192.168.10
+  !
+   
+  interface Tunnel20
+  ip address 101.0.2.2 255.255.255.0
+  tunnel source 176.192.168.34
+  tunnel destination 176.192.168.14
+  ````
+
+  ````
+  hostname core_R1
+  !
+  interface Tunnel10
+  ip address 101.0.1.1 255.255.255.0
+  tunnel source 176.192.168.10
+  tunnel destination 176.192.168.34
+
+  ````
+
+  ````
+  hostname core_R2
+  !
+  interface Tunnel20
+  ip address 101.0.2.1 255.255.255.0
+  tunnel source 176.192.168.14
+  tunnel destination 176.192.168.34
+  ````
+
+  Соотвественно, поверх данных туннелей GRE строится Backbone Area 0. 
+  Далее для всех роутеров добавлены соответствующие сети в зоны:
+  
+  ````
+  hostname filiale_core_R10
+  !
+  router ospf 1
+  router-id 1.1.1.10
+  area 1 stub
+  network 101.0.1.0 0.0.0.255 area 0
+  network 101.0.2.0 0.0.0.255 area 0
+  network 192.168.1.0 0.0.0.255 area 1
+  ````
+
+  ````
+  hostname core_R1
+  !
+  ip ospf priority 255
+  ip ospf priority 255
+  !
+  router ospf 1
+  router-id 1.1.1.1
+  area 1 stub
+  network 101.0.1.0 0.0.0.255 area 0
+  network 172.16.50.8 0.0.0.3 area 1
+  network 172.16.50.16 0.0.0.3 area 1
+  ````
+
+  ````
+  hostname core_R1
+  !
+  ip ospf priority 255
+  ip ospf priority 255
+  !
+  router ospf 1
+  router-id 1.1.1.2
+  area 1 stub
+  network 101.0.2.0 0.0.0.255 area 0
+  network 172.16.50.12 0.0.0.3 area 1
+  network 172.16.50.20 0.0.0.3 area 1
+  network 172.16.100.12 0.0.0.0 area 1
+  ````
+
+
+  И настройки L3 свитчей в рамках процесса OSPF:
+
+  ```` 
+  hostname ML_L3_1
+  !
+  router ospf 1
+  router-id 1.1.3.1
+  area 1 stub
+  passive-interface Vlan10
+  passive-interface Vlan20
+  passive-interface Vlan30
+  passive-interface Vlan40
+  passive-interface Vlan50
+  passive-interface Vlan60
+  network 172.16.0.0 0.0.3.255 area 1
+  network 172.16.50.8 0.0.0.7 area 1
+  ````
+  ````
+  hostname ML_L3_2
+  !
+  router ospf 1
+  router-id 1.1.3.2
+  area 1 stub
+  passive-interface Vlan10
+  passive-interface Vlan20
+  passive-interface Vlan30
+  passive-interface Vlan40
+  passive-interface Vlan50
+  passive-interface Vlan60
+  network 172.16.0.0 0.0.3.255 area 1
+  network 172.16.50.16 0.0.0.7 area 1
+  ````
+
+  На обоих свитчах все интерфейсы VlanX помечены как passive для того, чтобы исключить их из процесса OSPF, а лишь анонсировать сети наверх.
+
+  Также в Core роутерах настроен  ospf priority 255 на соотвествующих интерфейсах для того, чтобы они гарантировано становились DR/BDR роутерами в рамках своей зоны 3.
+
+  Проведем небольшое тестирование полученной кофигурации:
+
+  Все устройства включены, у хоста филиала есть доступ к файловому серверу: 
+
+  ![](/Labs/Lab15_FinalProject/pics/Filalle_ping_file_Server.jpg)
+
+  Отключается первый ротуер. Временно пропадает сетевая связность, однако после периода времени связность восстанавливается, в таблице маршрутизации остаюся только префиксы через 2-ой туннель
+
+  ![](/Labs/Lab15_FinalProject/pics/OSPF_R1_down.jpg)
+
+  После включения первого роутера связь не прерываются, а в таблице маршуртизации появляются префксы, доступные через оба туннеля: 
+
+  ![](/Labs/Lab15_FinalProject/pics/OSPF_R1_backagain.jpg)
+
+
+Таким образом, применение протокола OSPF дало возможность во-первых упростить настройку самой маршрутизации и передачу префиксов в филиалы, а также обеспечть достаточный уровень избыточности сети таким образом, что выход из строя какого-либо устрйоства не ведет к полной потере связности.
+
+### Настройки DHCP
+
+Все рабочие станции в рамках сети должны получать IP адрес посредством DHCP сервера.
+
+В основном офисе для этого предусмотрен выделенный сервер DHCP, находящийся в VLAN60 по адресу 172.16.3.141 
+Настройки DHCP cервера приведены ниже:
+
+````
+hostname dhcp_server
+!
+ip dhcp excluded-address 172.16.1.1 172.16.1.9
+ip dhcp excluded-address 172.16.1.129 172.16.1.138
+ip dhcp excluded-address 172.16.2.1 172.16.2.9
+ip dhcp excluded-address 172.16.2.129 172.16.2.138
+ip dhcp excluded-address 172.16.3.1 172.16.3.9
+!
+ip dhcp pool VLAN_10
+ network 172.16.1.0 255.255.255.128
+ default-router 172.16.1.1
+ dns-server 172.16.1.1
+ lease 2
+!
+ip dhcp pool VLAN_20
+ network 172.16.1.128 255.255.255.128
+ default-router 172.16.1.129
+ dns-server 172.16.1.129
+ lease 2
+!
+ip dhcp pool VLAN_30
+ network 172.16.2.0 255.255.255.128
+ default-router 172.16.2.1
+ dns-server 172.16.2.1
+ lease 2
+!
+ip dhcp pool VLAN_40
+ network 172.16.2.128 255.255.255.128
+ default-router 172.16.2.128
+ dns-server 172.16.2.128
+ lease 2
+!
+ip dhcp pool VLAN_50
+ network 172.16.3.0 255.255.255.128
+ default-router 172.16.3.0
+ dns-server 172.16.3.0
+ lease 2
+!
+````
+
+В офисе филиала роль DHCP выполняет непосредственно роутер Core_R10:
+
+````
+!
+hostname filiale_core_R10
+!
+!
+ip dhcp excluded-address 192.168.1.254
+ip dhcp excluded-address 192.168.1.1 192.168.1.9
+!
+ip dhcp pool POOL-1
+ network 192.168.1.0 255.255.255.0
+ default-router 192.168.1.1
+ dns-server 192.168.1.1
+ lease 2
+!
+````
