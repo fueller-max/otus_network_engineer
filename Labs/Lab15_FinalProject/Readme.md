@@ -318,6 +318,82 @@ Vlan60 - Group 60
   Master Down interval is 6.003 sec
 ````
 
+### Проблема расщепления VRRP
+
+При нарушении связности между L3 свитчами может возникнуть ситуация, когда оба свитча могут стать Master, что может приводить к нежелательным последствиям такаим как нарушение маршрутизации.
+
+![](/Labs/Lab15_FinalProject/pics/Vlan60_bothMasters.jpg)
+
+Показана ситуация, когда из-за обрыва линка до access switch оба GW в VLAN60 перешли в состояние Master.
+
+Для устранения данной ситуации рекомендуется наличие прямого линка между L3 устройствами.
+
+![](/Labs/Lab15_FinalProject/pics/PortChannel.jpg)
+
+Теперь оба устройства L3 имеют связность вне зависимости от нижнего уровня. 
+
+Настройки port-channel L3 свитчей.
+
+````
+interface Port-channel1
+ switchport trunk allowed vlan 1,10,20,30,40,50,60,100
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface Ethernet0/2
+ switchport trunk allowed vlan 1,10,20,30,40,50,60,100
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ channel-group 1 mode active
+!
+interface Ethernet0/3
+ switchport trunk allowed vlan 1,10,20,30,40,50,60,100
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ channel-group 1 mode active
+````
+
+#### Взаимодействие VRRP с STP.
+
+Работа протокола VRRP никак не связана с работой протокола STP. Но, при наличии петель протокол STP может изменить топологию, что может привести к неоптималтному распределения трафика.
+
+Например, для VLAN50 VRRP Master является L3_2, однако для STP Root Bridge является L3_1. Это приведет к тополгии, что трафик от хостов VLAN50 пойдет до GW(L3_2) через L3_1. Это не приведет к потере работоспобности сети, однако нарушит оптимальную балансировку трафика.
+
+![](/Labs/Lab15_FinalProject/pics/STP_VRRP_Master_Root.jpg)
+
+
+Для устранения данного эффекта необходимо учитывать совестную работу STP и VRPP и обеспечить так, что VRRP Master также был  и STP Root Bridge.
+
+![](/Labs/Lab15_FinalProject/pics/Access_sub_routing_NOT_OK.jpg)
+
+
+Для синхронизации работы STP и VRRP необходимо проводить доп.настройку STP для оптимального выбора Root`a в соотвествии с логикой VRRP.
+
+Проведем настройки выбора Root  в STP в соотвествсии с политикой VRRP:
+
+````
+ML_L3_1(config)#spanning-tree vlan 10 root primary
+ML_L3_1(config)#spanning-tree vlan 20 root primary
+
+ML_L3_2(config)#spanning-tree vlan 30 root primary
+ML_L3_2(config)#spanning-tree vlan 40 root primary
+ML_L3_2(config)#spanning-tree vlan 50 root primary
+ML_L3_2(config)#spanning-tree vlan 60 root primary
+````
+
+Также важно выполнение еще двух условий:
+1. Использование семейства rapid STP для быстрой сходимости (необходимо, чтобы топология сформировалась до начала работы VRRP)
+2. Активирована опция preemt для возвращения Master в случае возобновления работы (в VRRP включено по умолчанию)
+
+В этом случае выбор root STP будет синхронизирван с VRRP и будет обеспечена оптимальная топология.
+
+В случае отключении L3_2 Root STP и Master VRRP перемещается к L3_1:
+![](/Labs/Lab15_FinalProject/pics/Access_sub_routing_R2_fails_VLAN50.jpg)
+
+
+В случае возобновления работы L3_2 Root STP и Master VRRP перемещается обартно к L3_2:
+![](/Labs/Lab15_FinalProject/pics/Access_sub_routing_R2_back_VLAN50.jpg)
+
 
 ### Настройка провайдера ISP
 

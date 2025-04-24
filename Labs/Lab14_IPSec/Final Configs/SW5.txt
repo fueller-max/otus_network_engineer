@@ -65,7 +65,7 @@ interface Ethernet0/1
  switchport mode access
 !
 interface Ethernet0/2
- switchport trunk allowed vlan 10,20
+  10,20
  switchport trunk encapsulation dot1q
  switchport mode trunk
  channel-group 1 mode active
