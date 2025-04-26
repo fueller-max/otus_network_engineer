@@ -383,8 +383,18 @@ ML_L3_2(config)#spanning-tree vlan 50 root primary
 ML_L3_2(config)#spanning-tree vlan 60 root primary
 ````
 
+````
+ML_L3_1(config)#spanning-tree vlan 30 root secondary
+ML_L3_1(config)#spanning-tree vlan 40 root secondary
+ML_L3_1(config)#spanning-tree vlan 50 root secondary
+ML_L3_1(config)#spanning-tree vlan 60 root secondary
+
+ML_L3_2(config)#spanning-tree vlan 10 root secondary
+ML_L3_2(config)#spanning-tree vlan 20 root secondary
+````
+
 Также важно выполнение еще двух условий:
-1. Использование семейства rapid STP для быстрой сходимости (необходимо, чтобы топология сформировалась как можно быстрее, до начала работы VRRP)
+1. Использование семейства rapid STP для быстрой сходимости (необходимо, чтобы топология сформировалась как можно быстрее, до начала работы VRRP) c поддержкой STP для каждого VLAN (PVST,MSTP) 
 2. Активирована опция preemt для возвращения Master в случае возобновления работы "упавшего" устройства (в VRRP включено по умолчанию)
 
 В этом случае выбор root STP будет синхронизирован с VRRP и будет обеспечена оптимальная топология для балансировки трафика.
@@ -395,6 +405,65 @@ ML_L3_2(config)#spanning-tree vlan 60 root primary
 
 В случае возобновления работы L3_2 Root STP и Master VRRP перемещается обартно к L3_2:
 ![](/Labs/Lab15_FinalProject/pics/Access_sub_routing_R2_back_VLAN50.jpg)
+
+#### Настройка MSTP
+
+Протокол MSTP явялется предпочтительнымс точки зрения его непроприетарности.
+
+Проведем настройку протокола MSTP:
+
+Выделяем instance для каждого VLAN на L3_1, L3_2:
+
+
+`````
+ML_L3_1(config)#spanning-tree mst configuration
+ML_L3_1(config)#name main_office
+ML_L3_1(config)#revision 1
+ML_L3_1(config)#instance 1 vlan 10
+ML_L3_1(config)#instance 2 vlan 20
+ML_L3_1(config)#instance 3 vlan 30
+ML_L3_1(config)#instance 4 vlan 40
+ML_L3_1(config)#instance 5 vlan 50
+ML_L3_1(config)#instance 6 vlan 60
+`````
+
+Активация режима MSTP:
+````
+ML_L3_1(config)spanning-tree mode mst
+````
+
+
+Настройка приоритетов Root Bridge для L3_1,L3_2 в соотвествии с политикой VRRP:
+
+````
+ML_L3_1(config)#spanning-tree mst 1 root primary
+ML_L3_1(config)#spanning-tree mst 2 root primary
+ML_L3_1(config)#spanning-tree mst 3 root primary
+ML_L3_1(config)#spanning-tree mst 4 root primary
+ML_L3_1(config)#spanning-tree mst 5 root primary
+ML_L3_1(config)#spanning-tree mst 5 root secondary
+ML_L3_1(config)#spanning-tree mst 6 root secondary
+
+````
+
+````
+ML_L3_2(config)#spanning-tree mst 1 root secondary
+ML_L3_2(config)#spanning-tree mst 2 root secondary
+ML_L3_2(config)#spanning-tree mst 3 root secondary
+ML_L3_2(config)#spanning-tree mst 4 root secondary
+ML_L3_2(config)#spanning-tree mst 5 root secondary
+ML_L3_2(config)#spanning-tree mst 5 root primary
+ML_L3_2(config)#spanning-tree mst 6 root primary
+````
+
+Пример состояния MSTP для 50 и 60 VLAN: 
+![](/Labs/Lab15_FinalProject/pics/MSTP_VALN50_60.jpg)
+
+Тест переключения Root Bridge в случае выхода из строz R2 для VLAN 50:
+
+![](/Labs/Lab15_FinalProject/pics/MSTP_VALN50_Access_SW_R2_fails.jpg)
+![](/Labs/Lab15_FinalProject/pics/MSTP_VALN50_Access_SW_R2_OK_back.jpg)
+
 
 
 ### Настройка провайдера ISP
