@@ -468,6 +468,8 @@ ML_L3_2(config)#spanning-tree mst 6 root primary
 
 ### Настройка провайдера ISP
 
+Для обеспечения L3 связности между офисами необходимо настроить провайдера, имитриующего Интернет. 
+
 Главный офис и филиал подключены к Интернет, через который посредством VPN ,будет осуществляться связность до внутренних ресурсов. Роль Интернета в данной работе будут выполнять два роутера, находящиеся в автономной системе AS300. Суммаризированный префикс выдачи IP клиентам 176.192.168./24, который будет нарезаться по маске /30 каждому клиенту. 
 
 Для обеспечения передачи маршрутов и связности между роутерами настроен iBGP поверх Looback интерфейсов. Для связности Looback настроены статические маршруты по underlay сети 10.10.10.8/30 
@@ -541,9 +543,76 @@ end
 
 ````
 
+### Настройка GRE, IPsec
+
+После обеспечени L3 связности между офисами можно приступить к организации VPN туннелей между двуямя ротерами главного офиса и роутером филиала.
+
+Для организации VPN будем использовать GRE(Gerenic Routing Encapsulation) поверх IPsec с использованием pre-shared ключей.
+
+Настройка включает в себя настройку двух фаз:
+* Первая фаза включает себя настройку ISAKMP (Key Management Protocol)
+* Вторая фаза настройка  IPSec 
+
+Покажем настройку IPsec роутера Core_R1 головного офиса:
+
+* Phase 1:
+
+````
+core_R1(config)#crypto isakmp policy 1
+core_R1(config-isakmp)#encryption aes
+core_R1(config-isakmp)#hash sha256
+core_R1(config-isakmp)#authentication pre-share
+core_R1(config-isakmp)#group 14
+core_R1(config-isakmp)#lifetime 86400
+!
+core_R1(config)#crypto isakmp key secretkey address  0.0.0.0
+````
+Используем глобальную политику с приоритетом 1, метод шифрования AES, алгоритм хэширования SHA256, метод проверки подлинности PRE-SHARED KEY, 14 группа Диффи-Хеллмана, 86400 время жизни ключа сеанса до его смены.
 
 
+* Phase 2:
+````
+core_R1(config)#crypto ipsec transform-set VTI esp-aes esp-sha-hmac
+core_R1(cfg-crypto-trans)#mode transport
+!
+core_R1(config)#crypto ipsec profile IPSEC
+core_R1(ipsec-profile)#set transform-set VTI
+````
+
+Создаем Transform-Set с именем VTI, режим transport более подходящий для GRE туннелей. Создаем IPSEC профайл и привязываем к нему созданный Transform-Set. 
+
+
+На роутере создаем туннель c роутером филиала 176.192.168.34, c оверлейной сетью 101.0.1.0/24
+и применяем к нему созданный профиль IPSEC:
+
+````
+interface Tunnel10
+ ip address 101.0.1.1 255.255.255.0
+ tunnel source 176.192.168.10
+ tunnel destination 176.192.168.34
+ tunnel path-mtu-discovery
+ tunnel protection ipsec profile IPSEC
+
+````
+
+Далее на роутере филиала делаем аналогичные настройки для GRE, IPsec, GRE.
+
+После настройка проверяем состояние GRE и IPsec:
+
+* состояние туннеля GRE:
+![](/Labs/Lab15_FinalProject/pics/GRE_R1.jpg)
+
+* Состояние ISAKMP
+![](/Labs/Lab15_FinalProject/pics/IPSEC_R1_isakmp.jpg)
+* Состояние IPsec
+![](/Labs/Lab15_FinalProject/pics/IPSEC_R1_crypto_ipsec.jpg)
+
+Настройка туннеля между роутером R2 и R10 выполняется абсолютно аналогично.
+
+В результате должно быть два туннеля: Core_R1 <-> R10 и Core_R2 <-> R10, поврех которых будет работать процесс OSPF.
+ 
 ### Настройка OSPF
+
 
 Для обеспечения передачи маршрутов в рамках головного офиса, а также филиала запущен проткол динамической маршрутизации OSPF, принципиальная схема которого показана ниже:
 
